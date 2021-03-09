@@ -35,7 +35,8 @@
     "max-len": "off",
     "react/prefer-stateless-function": "off",
     "react/prop-types" : 0,
-    "@typescript-eslint/ban-ts-comment": "off"
+    "@typescript-eslint/ban-ts-comment": "off",
+    "@typescript-eslint/ban-types": "off"
   },
   "settings": {
     "react": {

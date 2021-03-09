@@ -3,11 +3,3 @@ export interface IRole {
     position: number | undefined
 }
 
-/*declare global {
-    interface Window {
-        registerComplite: Function;
-        loginComplite: Function;
-        invalidData: Function;
-    }
-}*/
-

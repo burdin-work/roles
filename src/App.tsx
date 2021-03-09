@@ -8,7 +8,8 @@ const create_icon = require('./assets/images/Vector.png').default
 const App: React.FC = () => {
   // States for editing
   const [rolesList, setRolesList] = useState<IRole[]>([])
-  const [checkedRole, setCheckedRole] = useState<IRole>({
+
+  const [clickedRole, setClickedRole] = useState<IRole>({
     name: undefined,
     position: undefined
   })
@@ -19,6 +20,11 @@ const App: React.FC = () => {
     name: undefined,
     position: undefined
   })
+
+  // @ts-ignore // получаем данные из json
+  window.setRoles = (roles: string) => {
+    setRolesList( JSON.parse(roles) );
+  }
 
   // DnD handlers
   const dragStartHandler = (e : React.DragEvent<HTMLElement>, card: IRole) => {
@@ -40,19 +46,21 @@ const App: React.FC = () => {
 
   const dropHandler = (e : React.DragEvent<HTMLElement>, card: IRole) => {
     const type = 'moved by dnd'
+    let newPosition : number | undefined = 0
     e.preventDefault()
-    const newList = rolesList.map( o => {
-      if(o.position === card.position) {
-        return {...o, position: draggedCard.position}
+    const newList = rolesList.map( role => {
+      if(role.position === card.position) {
+        return {...role, position: draggedCard.position}
       }
-      if(o.position === draggedCard.position) {
-        return {...o, position: card.position}
+      if(role.position === draggedCard.position) {
+        newPosition = card.position
+        return {...role, position: card.position}
       }
-      return o
+      return role
     })
       .sort((a: any, b: any) => a.position - b.position)
     setRolesList(newList)
-    sendDataToServer(newList, type)
+    sendDataToServer({name: draggedCard.name, position: newPosition}, type)
     e.currentTarget.style.background = '#202430'
   }
 
@@ -63,17 +71,17 @@ const App: React.FC = () => {
 
   const editRole = (name: string | undefined, position: number | undefined) : void  => {
     showFormToggle()
-    setCheckedRole( {name, position})
+    setClickedRole( {name, position})
   }
 
   const saveRoles = (name: string, position: number) : void  => {
 
     setRolesList(prev => {
-      const type = 'create'
+      let type = 'create'
       const newList = [...prev]
-      if(checkedRole.position !== undefined && checkedRole.position > newList.length) {
+      if(clickedRole.position !== undefined && clickedRole.position > newList.length) {
         newList.push({name, position})
-        sendDataToServer(newList, type)
+        sendDataToServer({name, position}, type)
         return newList
       }// если сохраняем новую роль
 
@@ -81,19 +89,18 @@ const App: React.FC = () => {
 
         if(newList[i].position === position) {
           newList[i].name = name
-          const type = 'edit'
+          type = 'edit'
           break
         }// если меняем существующую роль
       }
-      sendDataToServer(newList, type)
+      sendDataToServer({name, position}, type)
       return newList
     })
     showFormToggle()
   }
 
   const addNewRole = () : void  => {
-    const type = 'create'
-    setCheckedRole( {
+    setClickedRole( {
       name: undefined,
       position: rolesList.length + 1
     })
@@ -103,16 +110,16 @@ const App: React.FC = () => {
   const deleteRole = (name: string | undefined, position: number | undefined) : void  => {
     const type = 'remove'
     const newList = rolesList.filter( o => o.position !== position)
-      .map( (o, i) => {
-        o.position = i + 1
-        return o
+      .map( (role, i) => {
+        role.position = i + 1
+        return role
       })
     setRolesList(newList)
-    sendDataToServer(newList, type)
+    sendDataToServer({name, position}, type)
   }
 
-  const sendDataToServer = (data: IRole[], type: string) : void => {
-    console.log(JSON.stringify(data), type)
+  const sendDataToServer = (role: IRole, type: string) : void => {
+    console.log(JSON.stringify(role), type)
   }
 
 
@@ -121,7 +128,7 @@ const App: React.FC = () => {
 
       {existForm && <RoleForm
         showFormToggle={showFormToggle}
-        checkedRole={checkedRole}
+        clickedRole={clickedRole}
         saveRoles={saveRoles}
       />}
 

@@ -1,4 +1,4 @@
-import React, {DragEventHandler, useState} from 'react'
+import React from 'react'
 import {IRole} from "../interfaces";
 const edit_icon = require('../assets/images/Union.png').default
 const create_icon = require('../assets/images/Vector.png').default
@@ -15,8 +15,6 @@ type RoleProps = {
     dragEndHandler: (e : React.DragEvent<HTMLElement>) => void
     dragOverHandler: (e : React.DragEvent<HTMLElement>) => void
     dropHandler: (e : React.DragEvent<HTMLElement>, arg1: IRole) => void
-
-
 }
 
 export const Role: React.FC<RoleProps> = ({name, position, editRole, deleteRole, addNewRole,

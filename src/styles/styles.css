@@ -84,7 +84,6 @@ body {
     cursor: pointer;
 }
 
-
 .role img{
     margin-right: 10px;
 }
@@ -101,7 +100,6 @@ body {
     left: 25px;
 }
 
-
 .iconChange {
     width: 20px;
     height: 20px;
@@ -116,11 +114,6 @@ body {
     width: 200px;
     border-bottom: none;
 }
-
-
-
-
-
 
 /* слой затемнения */
 .dm-overlay {

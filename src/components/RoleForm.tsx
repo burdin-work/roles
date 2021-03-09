@@ -3,12 +3,12 @@ import {IRole} from "../interfaces";
 
 type RoleFormProps = {
   showFormToggle: () => void
-  checkedRole : IRole
+  clickedRole : IRole
   saveRoles: (name: string, position: number) => void
 }
 
-const RoleForm: React.FC<RoleFormProps> = ({showFormToggle, checkedRole, saveRoles}) => {
-  const [name, setName] = useState<string | undefined>(checkedRole.name)
+const RoleForm: React.FC<RoleFormProps> = ({showFormToggle, clickedRole, saveRoles}) => {
+  const [name, setName] = useState<string | undefined>(clickedRole.name)
 
   const changeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     setName(event.target.value)
@@ -49,7 +49,7 @@ const RoleForm: React.FC<RoleFormProps> = ({showFormToggle, checkedRole, saveRol
             />
             <button
               className="butt_save"
-              onClick={() => saveHandler(name, checkedRole.position)}
+              onClick={() => saveHandler(name, clickedRole.position)}
             >Сохранить</button>
           </div>
         </div>

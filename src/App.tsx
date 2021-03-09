@@ -46,7 +46,7 @@ const App: React.FC = () => {
 
   const dropHandler = (e : React.DragEvent<HTMLElement>, card: IRole) => {
     const type = 'moved by dnd'
-    let newPosition : number | undefined = 0
+    let newPosition : number | undefined = undefined
     e.preventDefault()
     const newList = rolesList.map( role => {
       if(role.position === card.position) {
@@ -126,7 +126,8 @@ const App: React.FC = () => {
   return (
     <div className="container main">
 
-      {existForm && <RoleForm
+      {existForm &&
+      <RoleForm
         showFormToggle={showFormToggle}
         clickedRole={clickedRole}
         saveRoles={saveRoles}

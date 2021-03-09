@@ -1,9 +1,9 @@
 import React, {useState} from 'react';
-import {ICheckedRole} from "../interfaces";
+import {IRole} from "../interfaces";
 
 type RoleFormProps = {
   showFormToggle: () => void
-  checkedRole : ICheckedRole
+  checkedRole : IRole
   saveRoles: (name: string, position: number) => void
 }
 

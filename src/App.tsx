@@ -1,67 +1,79 @@
-import React, {useEffect, useState} from 'react'
-import {IRole, ICheckedRole} from "./interfaces";
+import React, {useState} from 'react'
+import {IRole} from "./interfaces";
 import {RolesList} from "./components/RolesList";
 import RoleForm from "./components/RoleForm";
 
 const create_icon = require('./assets/images/Vector.png').default
 
-const rL: Array<IRole> = [
-  {name: 'empty1', position: 1},
-  {name: 'empty2', position: 2},
-  {name: 'empty3', position: 3},
-  {name: 'empty4', position: 4},
-  {name: 'empty5', position: 5},
-  {name: 'empty6', position: 6},
-  {name: 'empty7', position: 7},
-  {name: 'empty8', position: 8},
-  {name: 'empty9', position: 9},
-  {name: 'empty10', position: 10},
-  {name: 'empty11', position: 11},
-  {name: 'empty12', position: 12},
-  {name: 'empty13', position: 13},
-  {name: 'empty14', position: 14},
-  {name: 'empty15', position: 15},
-  {name: 'empty16', position: 16},
-  {name: 'empty17', position: 17},
-  {name: 'empty18', position: 18},
-  {name: 'empty19', position: 19},
-  {name: 'empty20', position: 20},
-  {name: 'empty21', position: 21},
-  {name: 'empty22', position: 22},
-  {name: 'empty23', position: 23},
-  {name: 'empty24', position: 24},
-  {name: 'empty25', position: 25},
-]
-
 const App: React.FC = () => {
-  const [rolesList, setRolesList] = useState<IRole[]>(rL)
-
-  const [checkedRole, setCheckedRole] = useState<ICheckedRole>({
+  // States for editing
+  const [rolesList, setRolesList] = useState<IRole[]>([])
+  const [checkedRole, setCheckedRole] = useState<IRole>({
     name: undefined,
     position: undefined
   })
   const [existForm, setExistForm] = useState<boolean>(false)
 
-  useEffect(() => {
-    //rolesList.sort((a, b) => a.position - b.position)
-    //   .map((o,i) => o.position = i + 1)
-  }, [])
+  // Dnd state
+  const [draggedCard, setDraggedCard] = useState<IRole>({
+    name: undefined,
+    position: undefined
+  })
 
+  // DnD handlers
+  const dragStartHandler = (e : React.DragEvent<HTMLElement>, card: IRole) => {
+    setDraggedCard(card)
+  }
+
+  const dragLeaveHandler = (e : React.DragEvent<HTMLElement>) => {
+    e.currentTarget.style.background = '#202430'
+  }
+
+  const dragEndHandler = (e : React.DragEvent<HTMLElement>) => {
+    e.currentTarget.style.background = '#202430'
+  }
+
+  const dragOverHandler = (e : React.DragEvent<HTMLElement>) => {
+    e.preventDefault()
+    e.currentTarget.style.background = '#393e4c'
+  }
+
+  const dropHandler = (e : React.DragEvent<HTMLElement>, card: IRole) => {
+    const type = 'moved by dnd'
+    e.preventDefault()
+    const newList = rolesList.map( o => {
+      if(o.position === card.position) {
+        return {...o, position: draggedCard.position}
+      }
+      if(o.position === draggedCard.position) {
+        return {...o, position: card.position}
+      }
+      return o
+    })
+      .sort((a: any, b: any) => a.position - b.position)
+    setRolesList(newList)
+    sendDataToServer(newList, type)
+    e.currentTarget.style.background = '#202430'
+  }
+
+  // Handlers for editing
   const showFormToggle = () : void  => {
     setExistForm(prev => !prev)
   }
 
-  const editRole = (name: string, position: number) : void  => {
+  const editRole = (name: string | undefined, position: number | undefined) : void  => {
     showFormToggle()
     setCheckedRole( {name, position})
   }
 
   const saveRoles = (name: string, position: number) : void  => {
-    setRolesList(prev => {
-      const newList = [...prev]
 
-      if(checkedRole.position !== undefined && checkedRole.position >= newList.length) {
+    setRolesList(prev => {
+      const type = 'create'
+      const newList = [...prev]
+      if(checkedRole.position !== undefined && checkedRole.position > newList.length) {
         newList.push({name, position})
+        sendDataToServer(newList, type)
         return newList
       }// если сохраняем новую роль
 
@@ -69,17 +81,18 @@ const App: React.FC = () => {
 
         if(newList[i].position === position) {
           newList[i].name = name
+          const type = 'edit'
           break
         }// если меняем существующую роль
       }
-
+      sendDataToServer(newList, type)
       return newList
     })
     showFormToggle()
   }
 
   const addNewRole = () : void  => {
-    console.log('click')
+    const type = 'create'
     setCheckedRole( {
       name: undefined,
       position: rolesList.length + 1
@@ -87,14 +100,19 @@ const App: React.FC = () => {
     showFormToggle()
   }
 
-  const deleteRole = (name: string, position: number) : void  => {
-    setRolesList(prev =>
-      [...prev].filter( o => o.position !== position)
-        .map( (o, i) => {
-          o.position = i + 1
-          return o
-        })
-    )
+  const deleteRole = (name: string | undefined, position: number | undefined) : void  => {
+    const type = 'remove'
+    const newList = rolesList.filter( o => o.position !== position)
+      .map( (o, i) => {
+        o.position = i + 1
+        return o
+      })
+    setRolesList(newList)
+    sendDataToServer(newList, type)
+  }
+
+  const sendDataToServer = (data: IRole[], type: string) : void => {
+    console.log(JSON.stringify(data), type)
   }
 
 
@@ -116,10 +134,15 @@ const App: React.FC = () => {
       </button>
 
       <RolesList
-        rolesList={rolesList}
         editRole={editRole}
         deleteRole={deleteRole}
         addNewRole={addNewRole}
+        dragStartHandler={dragStartHandler}
+        dragLeaveHandler={dragLeaveHandler}
+        dragEndHandler={dragEndHandler}
+        dragOverHandler={dragOverHandler}
+        dropHandler={dropHandler}
+        rolesList={rolesList}
       />
     </div>
   )

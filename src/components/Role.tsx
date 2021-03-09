@@ -1,20 +1,37 @@
-import React from 'react'
+import React, {DragEventHandler, useState} from 'react'
+import {IRole} from "../interfaces";
 const edit_icon = require('../assets/images/Union.png').default
 const create_icon = require('../assets/images/Vector.png').default
 const delete_icon = require('../assets/images/Group.png').default
 
 type RoleProps = {
-    name: string
-    position: number
-    editRole: (name: string, position: number) => void
-    deleteRole: (name: string, position: number) => void
+    name: string | undefined
+    position: number | undefined
+    editRole: (name: string | undefined, position: number | undefined) => void
+    deleteRole: (name: string | undefined, position: number | undefined) => void
     addNewRole: () => void
+    dragStartHandler: (e : React.DragEvent<HTMLElement>, arg1: IRole) => void
+    dragLeaveHandler: (e : React.DragEvent<HTMLElement>) => void
+    dragEndHandler: (e : React.DragEvent<HTMLElement>) => void
+    dragOverHandler: (e : React.DragEvent<HTMLElement>) => void
+    dropHandler: (e : React.DragEvent<HTMLElement>, arg1: IRole) => void
+
+
 }
 
-export const Role: React.FC<RoleProps> = ({name, position, editRole, deleteRole, addNewRole}) => {
+export const Role: React.FC<RoleProps> = ({name, position, editRole, deleteRole, addNewRole,
+  dragStartHandler, dragLeaveHandler, dragEndHandler,
+  dragOverHandler, dropHandler}) => {
 
   return (
-    <li>
+    <li
+      draggable
+      onDragStart={ (e) => dragStartHandler( e, {name, position} ) }
+      onDragLeave={ (e) => dragLeaveHandler(e) }
+      onDragEnd={ (e) => dragEndHandler(e) }
+      onDragOver={ (e) => dragOverHandler(e)}
+      onDrop={ (e) => dropHandler( e, {name, position} )}
+    >
 
       <div className="role visible-role">
         <img src={edit_icon}

@@ -1,0 +1,188 @@
+body {
+    margin: 0;
+    font: 14px "Arial Black", serif;
+}
+
+.container {
+    background-color: #202430;
+    margin: 0 auto;
+    width: 300px;
+    padding: 15px 0;
+    position: relative;
+}
+
+.main h2 {
+    color: white;
+    font-size: 1.5rem;
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.main button {
+    margin: 0 auto 60px auto;
+    background-color: #2b303c;
+    color: #ffffff;
+    border: none;
+    height: 40px;
+    width: 150px;
+    border-radius: 10px;
+    font-size: 12px;
+    display: flex;
+    justify-content: center;
+    flex-wrap: nowrap;
+    align-items: center;
+    cursor: pointer;
+}
+
+.main button .create-icon {
+    margin-right: 10px;
+}
+
+.roles_list {
+    list-style: none;
+    padding: 0;
+    background-color: #202430;
+}
+
+.role {
+    color: #fff;
+    height: 50px;
+    padding: 0 20px;
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: nowrap;
+    align-items: center;
+    position:relative;
+}
+
+.role.visible-role {
+    width: 100%;
+    padding-left: 0;
+    text-align: start;
+}
+
+.role.visible-role .role-name {
+    width: 100%;
+    margin-left: 45px;
+}
+.role.invisible-role .role-name {
+    margin-left: 25px;
+}
+
+.hidden-options {
+    display: none;
+    position:absolute;
+    left:0;
+    bottom:0;
+    right:0;
+    top:0;
+}
+
+.role:hover .hidden-options{
+    display:block;
+    background-color: #252931;
+    cursor: pointer;
+}
+
+
+.role img{
+    margin-right: 10px;
+}
+.role img:last-of-type{
+    margin-right: 0;
+}
+.role img:hover {
+    background-color: #434953;
+}
+
+.edit_icon {
+    position: absolute;
+    top: 19px;
+    left: 25px;
+}
+
+
+.iconChange {
+    width: 20px;
+    height: 20px;
+    background-color: #fff;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 2;
+}
+
+.role-name {
+    width: 200px;
+    border-bottom: none;
+}
+
+
+
+
+
+
+/* слой затемнения */
+.dm-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    background: rgba(0, 0, 0, 0.65);
+    display: block;
+    overflow: auto;
+    width: 100%;
+    height: 100%;
+    z-index: 3;
+}
+/* активируем слой затемнения и модальное окно */
+.dm-overlay:target {
+    display: block;
+    animation: fade .6s;
+}
+/* блочная таблица */
+.dm-table {
+    display: table;
+    width: 100%;
+    height: 100%;
+}
+/* ячейка блочной таблицы */
+.dm-cell {
+    display: table-cell;
+    padding: 0 1em;
+    vertical-align: middle;
+    text-align: center;
+}
+/* модальный блок */
+.dm-modal {
+    display: inline-block;
+    padding: 35px 20px 20px 20px;
+    /* максимально возможная ширина */
+    max-width: 240px;
+    max-height: 210px;
+    background: #fff;
+    /* внешняя тень блока */
+    box-shadow: 0px 15px 20px rgba(0, 0, 0, 0.22), 0px 19px 60px rgba(0, 0, 0, 0.3);
+    text-align: left;
+    /* анимация и время задержки */
+    animation: fade .8s;
+    position: relative;
+}
+
+.dm-modal svg.form-close {
+    position: absolute;
+    top: -3px;
+    right: -3px;
+    cursor: pointer;
+}
+
+.dm-modal svg.form-close:hover {
+    background-color: rgba(1, 1, 1, .15);
+}
+
+.dm-modal input::placeholder {
+    color: #111;
+}
+
+button.butt_save {
+    margin-top: 10px;
+}

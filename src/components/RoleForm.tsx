@@ -25,6 +25,13 @@ const RoleForm: React.FC<RoleFormProps> = ({showFormToggle, clickedRole, saveRol
     }
   }
 
+  const keyPressHandler = (event: React.KeyboardEvent ) => {
+    if (event.key === 'Enter') {
+      setName('')
+      saveHandler(name, clickedRole.position)
+    }
+  }
+
   return (
     <div className="dm-overlay" id="win1">
 
@@ -46,11 +53,13 @@ const RoleForm: React.FC<RoleFormProps> = ({showFormToggle, clickedRole, saveRol
               type="text"
               value={name}
               onChange={changeHandler}
+              onKeyPress={keyPressHandler}
             />
             <button
               className="butt_save"
-              onClick={() => saveHandler(name, clickedRole.position)}
-            >Сохранить</button>
+              onClick={() => saveHandler(name, clickedRole.position)}>
+              Сохранить
+            </button>
           </div>
         </div>
       </div>

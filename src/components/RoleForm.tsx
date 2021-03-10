@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {IRole} from "../interfaces";
 
 type RoleFormProps = {
@@ -9,6 +9,13 @@ type RoleFormProps = {
 
 const RoleForm: React.FC<RoleFormProps> = ({showFormToggle, clickedRole, saveRoles}) => {
   const [name, setName] = useState<string | undefined>(clickedRole.name)
+
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    inputRef.current?.focus();
+  }, []);
+
 
   const changeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     setName(event.target.value)
@@ -50,6 +57,7 @@ const RoleForm: React.FC<RoleFormProps> = ({showFormToggle, clickedRole, saveRol
             </div>
             <p>Введите название роли</p>
             <input
+              ref={inputRef}
               type="text"
               value={name}
               onChange={changeHandler}

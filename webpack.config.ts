@@ -1,6 +1,7 @@
 import path from "path";
 import webpack from "webpack";
 import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 const config: webpack.Configuration = {
   entry: "./src/index.tsx",
@@ -11,6 +12,11 @@ const config: webpack.Configuration = {
         files: './src/**/*.{ts,tsx,js,jsx}',
       },
     }),
+    new HtmlWebpackPlugin({
+      template: './templates/template-index.html',
+      inject: false,
+      alwaysWriteToDisk: true,
+    })
   ],
   module: {
     rules: [
